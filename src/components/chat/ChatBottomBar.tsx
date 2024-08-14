@@ -4,11 +4,24 @@ import React, { useRef, useState } from "react";
 import { Textarea } from "../ui/textarea";
 import EmojiPicker from "./EmojiPicker";
 import { Button } from "../ui/button";
+import useSound from "use-sound";
+import { usePreferences } from "@/store/usePreferences";
 
 const ChatBottomBar = () => {
   const [message, setMessage] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const isPending = false;
+  const { soundEnabled } = usePreferences();
+  const [playSound1] = useSound("/sounds/keystroke1.mp3");
+  const [playSound2] = useSound("/sounds/keystroke2.mp3");
+  const [playSound3] = useSound("/sounds/keystroke3.mp3");
+  const [playSound4] = useSound("/sounds/keystroke4.mp3");
+  const playSoundFunctions = [playSound1, playSound2, playSound3, playSound4];
+  const playRandomKeyStrokeSound = () => {
+    const randomIndex = Math.floor(Math.random() * playSoundFunctions.length);
+    soundEnabled && playSoundFunctions[randomIndex]();
+  };
+
   return (
     <div className="p-2 flex justify-between w-full items-center gap-2">
       {!message.trim() && (
@@ -36,7 +49,7 @@ const ChatBottomBar = () => {
             className="w-full border rounded-full flex items-center h-9 resize-none overflow-hidden
 						bg-background min-h-0"
             onChange={(e) => {
-              setMessage(e.target.value);
+              setMessage(e.target.value);playRandomKeyStrokeSound();
             }}
           />
           <div className="absolute right-2 bottom-0.5">
@@ -67,9 +80,7 @@ const ChatBottomBar = () => {
             {!isPending && (
               <ThumbsUp size={20} className="text-muted-foreground" />
             )}
-            {isPending && (
-              <Loader size={20} className="animate-spin" />
-            )}
+            {isPending && <Loader size={20} className="animate-spin" />}
           </Button>
         )}
       </AnimatePresence>

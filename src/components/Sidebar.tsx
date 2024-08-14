@@ -10,12 +10,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { LogOut, LogOutIcon } from "lucide-react";
-
+import useSound from "use-sound";
+import { usePreferences } from "@/store/usePreferences";
 interface SidebarProps {
   isCollapsed: boolean;
 }
 const Sidebar = ({ isCollapsed }: SidebarProps) => {
   const selectedUser = USERS[0];
+  const [playClickSound] = useSound("/sounds/mouse-click.mp3");
+  const { soundEnabled } = usePreferences();
+ 
+
   return (
     <div className="group relative flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2  max-h-full overflow-auto bg-background">
       {!isCollapsed && (
@@ -31,7 +36,11 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
             <TooltipProvider key={idx}>
               <Tooltip delayDuration={0}>
                 <TooltipTrigger asChild>
-                  <div>
+                  <div
+                    onClick={() => {
+                      soundEnabled && playClickSound();
+                    }}
+                  >
                     <Avatar className="my-1 flex justify-center items-center">
                       <AvatarImage
                         src={user.image || "/user-placeholder.png"}
@@ -61,6 +70,9 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                 selectedUser?.email === user.email &&
                   "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white shrink"
               )}
+              onClick={() => {
+                soundEnabled && playClickSound();
+              }}
             >
               <Avatar className="flex justify-center items-center">
                 <AvatarImage
@@ -90,13 +102,11 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
                   className="w-8 h-8 border-2 border-white rounded-full"
                 />
               </Avatar>
-              <p className="font-bold">
-                {"John Doe"} 
-              </p>
+              <p className="font-bold">{"John Doe"}</p>
             </div>
           )}
           <div className="flex">
-            <LogOut size={22} cursor={"pointer"}/>
+            <LogOut size={22} cursor={"pointer"} />
           </div>
         </div>
       </div>
