@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import TanStackProvider from "@/components/providers/TanStackProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Chatify",
-  description: "Developed by Bodhisatwa Chakraborty",
+  title: "Chat-Chat-App",
+  description: "Fullstack chat application",
 };
 
 export default function RootLayout({
@@ -24,7 +25,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <TanStackProvider>{children}</TanStackProvider>
         </ThemeProvider>
       </body>
     </html>
