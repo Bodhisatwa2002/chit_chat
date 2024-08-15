@@ -1,7 +1,11 @@
 import Image from "next/image";
 import React from "react";
 import AuthButtons from "./AuthButtons";
-const page = () => {
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { redirect } from "next/navigation";
+const page = async () => {
+  const { isAuthenticated } = getKindeServerSession();
+  if (await isAuthenticated()) return redirect("/");
   return (
     <div className="flex h-screen w-full">
       <div
@@ -39,7 +43,7 @@ const page = () => {
             </span>{" "}
             build
           </p>
-          <AuthButtons/>
+          <AuthButtons />
         </div>
       </div>
       <div className="flex-1 relative overflow-hidden justify-center items-center hidden md:flex bg-noise">

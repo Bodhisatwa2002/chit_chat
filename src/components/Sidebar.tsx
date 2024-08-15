@@ -1,4 +1,4 @@
-import { USERS } from "@/db/dummy";
+import { User, USERS } from "@/db/dummy";
 import { ScrollArea } from "./ui/scroll-area";
 import {
   Tooltip,
@@ -12,14 +12,15 @@ import { cn } from "@/lib/utils";
 import { LogOut, LogOutIcon } from "lucide-react";
 import useSound from "use-sound";
 import { usePreferences } from "@/store/usePreferences";
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 interface SidebarProps {
   isCollapsed: boolean;
+  users:User[];
 }
-const Sidebar = ({ isCollapsed }: SidebarProps) => {
+const Sidebar = ({ isCollapsed,users }: SidebarProps) => {
   const selectedUser = USERS[0];
   const [playClickSound] = useSound("/sounds/mouse-click.mp3");
   const { soundEnabled } = usePreferences();
- 
 
   return (
     <div className="group relative flex flex-col h-full gap-4 p-2 data-[collapsed=true]:p-2  max-h-full overflow-auto bg-background">
@@ -31,7 +32,7 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
         </div>
       )}
       <ScrollArea className="gap-2 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
-        {USERS.map((user, idx) =>
+        {users.map((user, idx) =>
           isCollapsed ? (
             <TooltipProvider key={idx}>
               <Tooltip delayDuration={0}>
@@ -106,7 +107,9 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
             </div>
           )}
           <div className="flex">
-            <LogOut size={22} cursor={"pointer"} />
+            <LogoutLink>
+              <LogOut size={22} cursor={"pointer"} />
+            </LogoutLink>
           </div>
         </div>
       </div>
